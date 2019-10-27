@@ -9,7 +9,10 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {BehaviorSubject, from, throwError} from 'rxjs';
 
 import {User} from './user';
+import {environment} from '../../environments/environment';
+import OAuthCredential = firebase.auth.OAuthCredential;
 
+/*
 export const firebaseConfig = {
   apiKey: 'AIzaSyBWuePTxXDO8P-9q1O88V4E5yp0LlMzz9k',
   authDomain: 'user-git.firebaseapp.com',
@@ -20,6 +23,7 @@ export const firebaseConfig = {
   appId: '1:840444383476:web:3d12cf3c0283867d62cea1',
   measurementId: 'G-Q04LJWBRGW'
 };
+*/
 
 export interface ResponsePayload {
   idToken: string;
@@ -36,7 +40,7 @@ export interface ResponsePayload {
 export class AuthService {
   private signInByEmailUrl =
     'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
-    + firebaseConfig.apiKey;
+    + environment.firebaseConfig.apiKey;
 
   private userSub = new BehaviorSubject<User>(null);
   user = this.userSub.asObservable();
@@ -64,6 +68,7 @@ export class AuthService {
   }
 
   logout() {
+    firebase.auth().signOut();
     this.userSub.next(null);
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
@@ -71,26 +76,23 @@ export class AuthService {
   }
 
   signInGitHub() {
-    firebase.initializeApp(firebaseConfig);
-
     const provider = new firebase.auth.GithubAuthProvider();
     const observable = from(firebase.auth().signInWithPopup(provider));
     return observable
       .pipe(
         catchError(this.handleErrorForGit),
         tap(respData => {
-
-          const tokenCredential = respData.credential;
+          const tokenCredential: OAuthCredential = respData.credential;
           const user = new User(
-           respData.user.email,
+            respData.user.email,
             null,
-           tokenCredential.accessToken,
-           respData.additionalUserInfo.username,
-           respData.user.photoURL);
-           this.userSub.next(user);
-           localStorage.setItem('user', JSON.stringify(user));
+            tokenCredential.accessToken,
+            respData.additionalUserInfo.username,
+            respData.user.photoURL);
+          this.userSub.next(user);
+          localStorage.setItem('user', JSON.stringify(user));
         })
-    );
+      );
   }
 
   reloadLogin() {
@@ -122,6 +124,7 @@ export class AuthService {
     }
     return throwError(error);
   }
+
   private handleErrorForGit(httpError: HttpErrorResponse) {
     let error = 'Что-то пошло не так, попробуйте позже';
     if (httpError.message) {

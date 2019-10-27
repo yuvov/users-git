@@ -25,8 +25,6 @@ export class AuthComponent implements OnInit {
   }
   onSignIn(form: FormGroup) {
 
-    console.log('form.valid ', form.valid);
-
     this.authService.signInByEmail(form.value.email, form.value.password)
       .subscribe(
         (val) => {

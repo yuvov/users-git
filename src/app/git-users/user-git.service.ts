@@ -25,6 +25,9 @@ export class UserGitService {
   constructor(private http: HttpClient) {}
 
   getSearchUsers(param: string): Observable<UserGit[]> {
+    if (!param) {
+      return;
+    }
     const option = param ?
       {params: new HttpParams().set('q', param)} : {};
 
