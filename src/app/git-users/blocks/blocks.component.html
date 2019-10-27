@@ -1,0 +1,14 @@
+<app-search (search)="onSearch($event)"></app-search>
+<div class="container">
+  <div class="row row-hover" *ngFor="let user of users$ | async"
+       (click)="onSelect(user)">
+    <div class="col-2">{{user.id}}</div>
+    <div class="col-2">{{user.login}}</div>
+    <div class="col-2">
+      <app-avatar [avatarUrl]="user.avatar_url"></app-avatar>
+    </div>
+    <div class="col-4">
+      <a href={{user.html_url}}>{{user.html_url}}</a></div>
+    <div class="col-2">{{user.type}}</div>
+  </div>
+</div>

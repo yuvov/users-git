@@ -1,0 +1,11 @@
+.active {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+.dropdown-toggle,
+.dropdown-item {
+  cursor: pointer;
+}
+.user-info {
+  display: flex;
+}

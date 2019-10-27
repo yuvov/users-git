@@ -1,0 +1,21 @@
+<app-search (search)="onSearch($event)"></app-search>
+<table class="table" *ngIf="users$ | async">
+  <thead>
+  <tr>
+    <th scope="col">id</th>
+    <th scope="col">Login</th>
+    <th scope="col">Avatar</th>
+    <th scope="col">Url</th>
+    <th scope="col">Type</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let user of users$ | async" (click)="onSelect(user)" class="row-hover">
+    <td>{{user.id}}</td>
+    <td>{{user.login}}</td>
+    <td><app-avatar [avatarUrl]="user.avatar_url"></app-avatar></td>
+    <td>  <a href={{user.html_url}}>{{user.html_url}}</a></td>
+    <td>{{user.type}}</td>
+  </tr>
+  </tbody>
+</table>

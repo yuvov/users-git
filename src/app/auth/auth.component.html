@@ -1,0 +1,20 @@
+<form class="form-signin" [formGroup]="signInForm">
+
+  <label for="inputName" class="sr-only">Пользователь</label>
+  <input type="email" id="inputName" class="form-control"
+         placeholder="Пользователь" autofocus
+         formControlName="email">
+
+  <label for="inputPassword" class="sr-only">Пароль</label>
+  <input type="password" id="inputPassword" class="form-control"
+         placeholder="Пароль" formControlName="password">
+
+  <button class="btn btn-lg btn-primary btn-block"
+          type="submit" (click)="onSignIn(signInForm)"
+          [disabled]="!signInForm.valid">Sign in with email</button>
+  <button class="btn btn-lg btn-primary btn-block"
+          type="submit" (click)="signInGit()"
+  >Sign in with github</button>
+
+  <p class="alert alert-danger" *ngIf="message">{{message}}</p>
+</form>
